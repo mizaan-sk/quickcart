@@ -63,7 +63,7 @@ export const createUserOrder = inngest.createFunction(
   {
     id: "create-user-order", // 🆔 Ye function ka unique naam hai (Inngest ke andar identify karne ke liye)
     batchEvents: {
-      maxSize: 25,           // 📦 Ek batch me max 25 orders process honge
+      maxSize: 5,           // 📦 Ek batch me max 25 orders process honge
       timeout: "5s",         // ⏱️ 5 seconds ke andar batch execute kar do
     },
   },
