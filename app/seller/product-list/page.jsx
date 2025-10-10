@@ -31,6 +31,26 @@ const ProductList = () => {
       toast.error(error.message);
     }
   };
+  const deleteProduct = async (productId) => {
+  try {
+    const token = await getToken();
+    const { data } = await axios.delete("/api/product/delete", {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { productId }, // 👈 send product ID to backend
+    });
+
+    if (data.success) {
+      toast.success("Product removed successfully!");
+      // Remove deleted product from the UI immediately
+      setProducts((prev) => prev.filter((item) => item._id !== productId));
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error(error.message);
+    console.error(error);
+  }
+};
 
   useEffect(() => {
     if (user) {
@@ -58,6 +78,9 @@ const ProductList = () => {
                   <th className="px-4 py-3 font-medium truncate">Price</th>
                   <th className="px-4 py-3 font-medium truncate max-sm:hidden">
                     Action
+                  </th>
+                  <th className="px-4 py-3 font-medium truncate max-sm:hidden">
+                    Remove
                   </th>
                 </tr>
               </thead>
@@ -92,6 +115,9 @@ const ProductList = () => {
                           alt="redirect_icon"
                         />
                       </button>
+                    </td>
+                    <td>
+                      <button  onClick={() => deleteProduct(product._id)} className="px-4 py-3">Delete</button>
                     </td>
                   </tr>
                 ))}
