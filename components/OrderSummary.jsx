@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const OrderSummary = () => {
-  const { currency, router, getCartCount, getCartAmount, getToken, user } =
+  const { currency, router, getCartCount, getCartAmount, getToken, user,setCartItems,cartItems } =
     useAppContext();
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,7 +18,7 @@ const OrderSummary = () => {
       const { data } = await axios.get("/api/user/get-address", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(data)
+      // console.log(data);
       if (data.success) {
         // console.log(hello);
         setUserAddresses(data.addresses);
@@ -39,7 +39,58 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
-  const createOrder = async () => {};
+  const createOrder = async () => {
+  try {
+    // 🏠 Step 1: Check kar rahe hain ki user ne address select kiya hai ya nahi
+    if (!selectedAddress) {
+      return toast.error("Please Select An Address!"); // ❌ Agar nahi kiya to error show
+    }
+
+    // 🛒 Step 2: cartItems object ko array me convert kar rahe hain
+    // {productId: quantity} → [{product: productId, quantity: number}]
+    let cartItemsArray = Object.keys(cartItems).map((key) => ({
+      product: key,
+      quantity: cartItems[key],
+    }));
+
+    // 🔍 Step 3: Agar kisi product ki quantity 0 hai to usse hata rahe hain
+    cartItemsArray = cartItemsArray.filter((item) => item.quantity > 0);
+
+    // ❌ Step 4: Agar array empty hai (cart me kuch nahi), to error show karo
+    if (cartItemsArray.length === 0) {
+      return toast.error("Your cart is empty!");
+    }
+
+    // 🔑 Step 5: Clerk se current user ka token le rahe hain (authentication ke liye)
+    const token = await getToken();
+
+    // 📦 Step 6: Order data backend API ko bhej rahe hain
+    const { data } = await axios.post(
+      "/api/order/create", // 👉 API route
+      {
+        address: selectedAddress._id, // user ka selected address ID
+        items: cartItemsArray,        // products list
+      },
+      { headers: { Authorization: `Bearer ${token}` } } // 🔐 secure header
+    );
+
+    // ✅ Step 7: Backend se success response aaya to
+    if (data.success) {
+      toast.success(data.message); // 🎉 Success message show karo
+      setCartItems({});             // 🧹 Cart ko frontend se clear kar do
+      router.push("/order-placed"); // 🚀 User ko "Order Placed" page par le jao
+    } 
+    // ❌ Agar backend se error aaya
+    else {
+      toast.error(data.message);
+    }
+  } 
+  // ⚠️ Step 8: Agar koi bhi error aaya try block me
+  catch (error) {
+    toast.error(error.message); // 🔥 Error message show karo
+  }
+};
+
 
   useEffect(() => {
     if (user) {

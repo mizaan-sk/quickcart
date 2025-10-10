@@ -1,3 +1,4 @@
+import { inngest } from "@/config/inngest";
 import Product from "@/models/Product";
 import User from "@/models/User";
 import { getAuth } from "@clerk/nextjs/server";
@@ -18,7 +19,7 @@ export async function POST(request) {
 
       // 💰 Accumulator (acc) me product ka offerPrice * quantity add kar rahe hain
       // Yaani har item ka total price calculate karke acc me jodte ja rahe hain
-      return acc + product.offerPrice * item.quantity;
+      return await acc + product.offerPrice * item.quantity;
     }, 0); // 🔢 Ye 0 initial value hai — pehle acc ki value 0 se start hoti hai
     await inngest.send({
       name: "order/created",
