@@ -51,7 +51,7 @@ const ProductList = () => {
     console.error(error);
   }
 };
-
+// const editProduct = (productId) => {}
   useEffect(() => {
     if (user) {
       fetchSellerProduct();
@@ -77,7 +77,7 @@ const ProductList = () => {
                   </th>
                   <th className="px-4 py-3 font-medium truncate">Price</th>
                   <th className="px-4 py-3 font-medium truncate max-sm:hidden">
-                    Action
+                    Edit
                   </th>
                   <th className="px-4 py-3 font-medium truncate max-sm:hidden">
                     Remove
@@ -108,7 +108,7 @@ const ProductList = () => {
                         onClick={() => router.push(`/product/${product._id}`)}
                         className="flex items-center gap-1 px-1.5 md:px-3.5 py-2 bg-orange-600 text-white rounded-md"
                       >
-                        <span className="hidden md:block">Visit</span>
+                        <span className="hidden md:block">Edit</span>
                         <Image
                           className="h-3.5"
                           src={assets.redirect_icon}
