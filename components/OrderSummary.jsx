@@ -1,5 +1,6 @@
 import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
+import { useClerk } from "@clerk/nextjs";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -38,9 +39,12 @@ const OrderSummary = () => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
   };
-
+const {openSignIn} = useClerk()
   const createOrder = async () => {
   try {
+     if(!user){
+openSignIn();
+  }
     // 🏠 Step 1: Check kar rahe hain ki user ne address select kiya hai ya nahi
     if (!selectedAddress) {
       return toast.error("Please Select An Address!"); // ❌ Agar nahi kiya to error show
@@ -90,7 +94,11 @@ const OrderSummary = () => {
     toast.error(error.message); // 🔥 Error message show karo
   }
 };
-
+const checkUser = () => {
+  if(!user){
+openSignIn();
+  }
+}
 
   useEffect(() => {
     if (user) {
