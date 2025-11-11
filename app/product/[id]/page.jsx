@@ -14,8 +14,8 @@ import { useClerk } from "@clerk/nextjs";
 
 const Product = () => {
   const { id } = useParams();
-const {openSignIn} = useClerk();
-  const { products, router, addToCart,user } = useAppContext();
+  const { openSignIn } = useClerk();
+  const { products, router, addToCart, user } = useAppContext();
 
   const [mainImage, setMainImage] = useState(null);
   const [productData, setProductData] = useState(null);
@@ -32,16 +32,15 @@ const {openSignIn} = useClerk();
   return productData ? (
     <>
       <Navbar />
-      <div className="px-6 md:px-16 lg:px-32 pt-14 space-y-10">
+      <div className="max-w-[1490px] mx-auto px-6 md:px-16 lg:px-32 pt-14 space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          <div className="px-5 lg:px-16 xl:px-20">
-            <div className="rounded-lg overflow-hidden bg-gray-500/10 mb-4">
+          <div className="px-3 lg:px-12 xl:px-14">
+            <div className="rounded-lg overflow-hidden bg-gray-500/10 mb-4 aspect-[10/9] relative">
               <Image
                 src={mainImage || productData.image[0]}
                 alt="alt"
-                className="w-full h-auto object-cover mix-blend-multiply"
-                width={1280}
-                height={720}
+                fill
+                className="object-contain mix-blend-multiply"
               />
             </div>
 
@@ -50,14 +49,13 @@ const {openSignIn} = useClerk();
                 <div
                   key={index}
                   onClick={() => setMainImage(image)}
-                  className="cursor-pointer rounded-lg overflow-hidden bg-gray-500/10"
+                  className="cursor-pointer rounded-lg overflow-hidden bg-gray-500/10 aspect-square relative"
                 >
                   <Image
                     src={image}
                     alt="alt"
-                    className="w-full h-auto object-cover mix-blend-multiply"
-                    width={1280}
-                    height={720}
+                    fill
+                    className="object-contain mix-blend-multiply"
                   />
                 </div>
               ))}
@@ -143,11 +141,10 @@ const {openSignIn} = useClerk();
               <button
                 onClick={() => {
                   addToCart(productData._id);
-                  if(user){
-                  router.push("/cart"); 
-                  }else{
+                  if (user) {
+                    router.push("/cart");
+                  } else {
                     openSignIn();
-                    
                   }
                   // router.push("/cart");
                 }}
@@ -206,7 +203,7 @@ export default Product;
 //   const [mainImage, setMainImage] = useState(null);
 //   const [isEditing, setIsEditing] = useState(false);
 //   // Renamed to singular as we'll replace one at a time for simplicity
-//   const [newImageFile, setNewImageFile] = useState(null); 
+//   const [newImageFile, setNewImageFile] = useState(null);
 //   const [imageToReplaceIndex, setImageToReplaceIndex] = useState(null); // Tracks which old image index to replace
 //   const imageInputRef = useRef(null); // Ref for the hidden file input
 
@@ -242,9 +239,9 @@ export default Product;
 //       setEditableData((prev) => ({ ...prev, image: updatedImages }));
 //     }
 //     // Reset the file input value so same file can be selected again
-//     e.target.value = null; 
+//     e.target.value = null;
 //   };
- 
+
 //   // 🖱️ Handles click on a thumbnail to initiate image replacement
 //   const handleThumbnailClick = (image, index) => {
 //     setMainImage(image);
@@ -334,7 +331,7 @@ export default Product;
 //                 >
 //                   <Image
 //                     // Use a unique key for images that are being replaced to force re-render
-//                     key={image} 
+//                     key={image}
 //                     src={image}
 //                     alt="thumbnail"
 //                     className="w-full h-auto object-cover"
@@ -360,7 +357,7 @@ export default Product;
 //                 />
 //               )}
 //             </div>
-            
+
 //             {/* NO UPLOAD NEW IMAGES BLOCK - Replaced by thumbnail click logic */}
 //           </div>
 
@@ -493,7 +490,6 @@ export default Product;
 //             </div>
 //           </div>
 //         </div>
-        
 
 //         {/* FEATURED PRODUCTS */}
 //         <div className="flex flex-col items-center">
